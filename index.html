@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notes</title>
+  <link href="style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+  <div id="game-log"></div>
+  <div id="game"></div>
+  <div id="interaction">
+    <div>
+      <p id="bank-text">Bank: $100</p>
+      <button id="game-btn">New Game</button>
+      <input id="bet-input" placeholder="Input bet amount">
+      <button id="start" disabled=true>Start</button>
+    </div>
+    <div>
+      <button id="hit" disabled=true>Hit</button>
+      <button id="stand" disabled=true>Stand</button>
+    </div>
+  </div>
+  <div class="hand-grid"></div>
+  <script src="/socket.io/socket.io.js"></script>
+  <script type="module" src="/public/index.js"></script>
+  <script type="module" src="/public/script.js"></script>
+</body>
+
+</html>
