@@ -74,8 +74,8 @@ const renderCards = () => {
         flippedCards.push(card);
         cardContainer.classList.toggle("flip");
         if (flippedCards.length === hand.length) {
-          blackjackCheck();
           hit.disabled = false;
+          blackjackCheck();
         }
       });
 
