@@ -19,10 +19,20 @@ button {
   border-radius: 4px;
   width: 140px;
   height: 35px;
+  margin: 10px;
 }
 
 button:not(:disabled):hover {
   background: wheat;
+}
+
+input {
+  font-weight: 800;
+  border: none;
+  border-radius: 4px;
+  width: 140px;
+  height: 35px;
+  margin: 10px;
 }
 
 #game-log {

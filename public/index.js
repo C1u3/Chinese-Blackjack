@@ -42,6 +42,7 @@ const blackjackCheck = () => {
       log("You got 21!");
   } else if (total > 21) {
       log("You busted.");
+      log("Why the fuck did you hit again?");
   }
   hit.disabled = true;
 }
@@ -91,6 +92,11 @@ const log = (info) => {
   gameLog.scrollTo(0, gameLog.scrollHeight);
 }
 
+log("Welcome to gambling!");
+log("I am your trustworthy emotional support bot.")
+log("99% of gamblers quit before they win just so you know.");
+log("Press new game and have fun!")
+
 newGame.addEventListener("click", () => {
   hand = [];
   prevHand = [];
@@ -111,10 +117,8 @@ newGame.addEventListener("click", () => {
 start.addEventListener("click", () => {
   betAmount = parseInt(betInput.value);
   if (!betAmount) {
+    log("You have autism?")
     log("Please key in a valid amount.");
-    return;
-  } else if (betAmount === 0) {
-    log("You can't bet $0.");
     return;
   } else if (betAmount * 2 > bank) {
     log("You can't afford to bet that amount. You can only bet half your bank.");
@@ -161,14 +165,16 @@ stand.addEventListener("click", () => {
 
   if (total > 21 && dealerHandTotal > 21) {
     log("Both you and dealer busted.");
+    log("Both also missing a chromosome.")
   } else if (total === dealerHandTotal) {
-    log("You tied with dealer.");
+    log("You tied with dealer, nigger.");
   } else if (total === 21 && dealerHandTotal !== total) {
     log(`You won $${betAmount * 2}(2x)!`);
     bank += betAmount * 2;
     bankText.innerHTML = `Bank: $${bank}`;
   } else if (dealerHandTotal === 21 && total !== dealerHandTotal) {
     log(`You lost $${betAmount * 2}(2x).`);
+    log("LOL.");
     bank -= betAmount * 2;
     bankText.innerHTML = `Bank: $${bank}`;
   } else if (total > dealerHandTotal && total < 21) {
@@ -177,10 +183,12 @@ stand.addEventListener("click", () => {
     bankText.innerHTML = `Bank: $${bank}`;
   } else if (dealerHandTotal > total && dealerHandTotal < 21) {
     log(`You lost $${betAmount}.`);
+    log("Just noob bro.");
     bank -= betAmount;
     bankText.innerHTML = `Bank: $${bank}`;
   } else if (total > 21 && dealerHandTotal < 21) {
     log(`You lost $${betAmount}.`);
+    log("You fucking retarded.")
     bank -= betAmount;
     bankText.innerHTML = `Bank: $${bank}`;
   } else if (dealerHandTotal > 21 && total < 21) {
