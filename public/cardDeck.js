@@ -1,4 +1,4 @@
-export default [
+const cardDeck = [
   { rank: "Ace", suit: "Clubs", points: 11, src: "https://i.imgur.com/Z3OGPrH.png" },
   { rank: "2", suit: "Clubs", points: 2, src: "https://i.imgur.com/rnLOxLN.png" },
   { rank: "3", suit: "Clubs", points: 3, src: "https://i.imgur.com/fExN8ut.png" },
