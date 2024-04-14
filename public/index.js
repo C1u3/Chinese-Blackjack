@@ -19,6 +19,9 @@ deck.forEach(card => {
   img.src = card.src;
 });
 
+const img = new Image();
+img.src = "https://i.imgur.com/CLvzRZN.png";
+
 const shuffleDeck = () => {
   for (let i = deck.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
