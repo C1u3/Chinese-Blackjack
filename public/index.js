@@ -85,9 +85,10 @@ const renderCards = () => {
 }
 
 const log = (info) => {
-  const p = document.createElement("p");
-  p.innerHTML = info;
-  gameLog.appendChild(p);
+  const container = document.createElement("div");
+  container.innerHTML = info
+  gameLog.appendChild(container);
+  gameLog.scrollTo(0, gameLog.scrollHeight);
 }
 
 newGame.addEventListener("click", () => {
@@ -95,7 +96,6 @@ newGame.addEventListener("click", () => {
   prevHand = [];
   flippedCards = [];
   cardImagesContainer.innerHTML = "";
-  gameLog.innerHTML = "";
   log("You created a new game.");
   deck = [...cardDeck];
   log("Deck was created.");
@@ -176,11 +176,11 @@ stand.addEventListener("click", () => {
     bank += betAmount;
     bankText.innerHTML = `Bank: $${bank}`;
   } else if (dealerHandTotal > total && dealerHandTotal < 21) {
-    log(`You lost $${betAmount}!`);
+    log(`You lost $${betAmount}.`);
     bank -= betAmount;
     bankText.innerHTML = `Bank: $${bank}`;
   } else if (total > 21 && dealerHandTotal < 21) {
-    log(`You lost $${betAmount}!`);
+    log(`You lost $${betAmount}.`);
     bank -= betAmount;
     bankText.innerHTML = `Bank: $${bank}`;
   } else if (dealerHandTotal > 21 && total < 21) {
