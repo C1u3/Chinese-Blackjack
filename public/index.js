@@ -14,8 +14,10 @@ let bank = 100;
 let hand = [];
 let prevHand = [];
 let flippedCards = [];
+let dragon = false;
 let dealerHand = [];
 let dealerPrevHand = [];
+let dealerDragon = false;
 
 (() => {
   deck.forEach(card => {
@@ -66,7 +68,10 @@ const calculateTotal = (arr) => {
 
 const blackjackCheck = () => {
   const total = calculateTotal(hand);
-  if (total === 21) {
+  if (hand.length === 5 && total === 21) {
+    dragon = true;
+    log("YOU GOT A BLACKJACK DRAGON!");
+  } else if (total === 21) {
     log("You got 21!");
     hit.disabled = true;
   } else if (total > 21) {
@@ -74,7 +79,13 @@ const blackjackCheck = () => {
     log("Why the fuck did you hit again?");
     hit.disabled = true;
     cardImagesContainer.style.background = "darkred";
-  } else {
+  } else if (hand.length === 4) {
+    log("You are 1 card away from a dragon.");
+  } else if (hand.length === 5) {
+    dragon = true;
+    log("DRAGON!");
+  }
+  else {
     log("You can choose to hit (draw a card) or stand (end turn).");
   }
 }
@@ -170,8 +181,10 @@ newGame.addEventListener("click", async () => {
   hand = [];
   prevHand = [];
   flippedCards = [];
+  dragon = false;
   dealerHand = [];
   dealerPrevHand = [];
+  dealerDragon = false;
   cardImagesContainer.innerHTML = "";
   cardImagesContainer.style.background = "darkslategray";
   dealerHandContainer.innerHTML = "";
@@ -234,9 +247,8 @@ hit.addEventListener("click", () => {
   stand.disabled = true;
   
   hand.push(drawCard());
-  log("You hit, dealer dealt you a card.");
-
   renderPlayerCards();
+  log("You hit, dealer dealt you a card.");
 });
 
 stand.addEventListener("click", async () => {
@@ -251,9 +263,13 @@ stand.addEventListener("click", async () => {
 
   let dealerHandTotal = calculateTotal(dealerHand);
   
-  while (dealerHandTotal <= 16) {
+  while (dealerHandTotal <= 16 && dealerHand.length <= 4) {
     dealerHand.push(drawCard());
     dealerHandTotal = calculateTotal(dealerHand);
+    if (dealerHand.length === 5 && dealerHandTotal <= 21) {
+      dealerDragon = true;
+      log("Dealer got a dragon! (Dev note: I have yet to complete the winning condition for this yet, report to me and refresh if you see this pls.");
+    }
     await wait(1000);
     renderDealerCards();
     log("The dealer decided to hit.");
@@ -272,7 +288,13 @@ stand.addEventListener("click", async () => {
     log("Dealer busted.");
   }
 
-  if (total > 21 && dealerHandTotal > 21) {
+  if (dragon) {
+    log(`You got a dragon! You won $${betAmount * 2}(2x)!`);
+    bank += betAmount * 2;
+  } else if (dragon && total === 21) {
+    log(`You got a blackjack dragon! You won $${betAmount * 3}(3x)!`);
+    bank += betAmount * 3;
+  } else if (total > 21 && dealerHandTotal > 21) {
     log("Both you and dealer busted.");
     log("Both also missing a chromosome.")
   } else if (total === dealerHandTotal) {
@@ -280,33 +302,29 @@ stand.addEventListener("click", async () => {
   } else if (total === 21 && dealerHandTotal !== total) {
     log(`You won $${betAmount * 2}(2x)!`);
     bank += betAmount * 2;
-    bankText.innerHTML = `Bank: $${bank}`;
   } else if (dealerHandTotal === 21 && total !== dealerHandTotal) {
     log(`You lost $${betAmount * 2}(2x).`);
     log("LOL.");
     bank -= betAmount * 2;
-    bankText.innerHTML = `Bank: $${bank}`;
   } else if (total > dealerHandTotal && total < 21) {
     log(`You won $${betAmount}!`);
     bank += betAmount;
-    bankText.innerHTML = `Bank: $${bank}`;
   } else if (dealerHandTotal > total && dealerHandTotal < 21) {
     log(`You lost $${betAmount}.`);
     log("Kill yourself.");
     bank -= betAmount;
-    bankText.innerHTML = `Bank: $${bank}`;
   } else if (total > 21 && dealerHandTotal < 21) {
     log(`You lost $${betAmount}.`);
     log("You fucking retarded.")
     bank -= betAmount;
-    bankText.innerHTML = `Bank: $${bank}`;
   } else if (dealerHandTotal > 21 && total < 21) {
     log(`You won $${betAmount}!`);
     bank += betAmount;
-    bankText.innerHTML = `Bank: $${bank}`;
   } else {
     log("Unidentified winning condition, report to dev.");
   }
+
+  bankText.innerHTML = `Bank: $${bank}`;
 
   if (bank <= 1 ) {
     log("You are now bankrupt and homeless. You should go and borrow some money.");
