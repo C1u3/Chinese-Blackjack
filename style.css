@@ -2,14 +2,16 @@ body {
   background-image: url(https://i.ibb.co/ccg734n/poker-purple-background-playing-card-symbols-pattern-blackjack-vector.jpg);
   color: white;
   display: grid;
-  gap: 10px;
+  gap: 5px;
   grid-template-columns: 340px 1fr;
+  grid-template-rows: 200px 1fr 200px;
   align-items: end;
 }
 
 p {
   font-size: 20px;
   font-weight: 500;
+  line-height: 10px;
 }
 
 button {
@@ -19,7 +21,21 @@ button {
   border-radius: 4px;
   width: 140px;
   height: 35px;
-  margin: 10px;
+}
+
+#hit, #stand {
+  background: lightgreen;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+}
+
+#hit:disabled, #stand:disabled {
+  background: gray;
+}
+
+#hit:not(:disabled):hover, #stand:not(:disabled):hover {
+  background: white;
 }
 
 button:not(:disabled):hover {

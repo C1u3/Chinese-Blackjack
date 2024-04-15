@@ -11,7 +11,7 @@
 
 <body>
   <div id="game-log"></div>
-  <div id="game"></div>
+  <div id="dealer-hand" class="hand-grid"></div>
   <div id="interaction">
     <div>
       <p id="bank-text">Bank: $100</p>
@@ -22,9 +22,10 @@
     <div>
       <button id="hit" disabled=true>Hit</button>
       <button id="stand" disabled=true>Stand</button>
+      <p>Your hand:</p>
     </div>
   </div>
-  <div class="hand-grid"></div>
+  <div id="player-hand" class="hand-grid"></div>
   <script src="/socket.io/socket.io.js"></script>
   <script src="./public/cardDeck.js"></script>
   <script src="./public/index.js"></script>

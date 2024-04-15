@@ -5,7 +5,8 @@ const stand = document.getElementById("stand");
 const newGame = document.getElementById("game-btn");
 const betInput = document.getElementById("bet-input");
 const start = document.getElementById("start");
-const cardImagesContainer = document.querySelector(".hand-grid")
+const dealerHandContainer = document.getElementById("dealer-hand");
+const cardImagesContainer = document.getElementById("player-hand");
 
 let deck = [...cardDeck];
 let betAmount;
@@ -13,14 +14,20 @@ let bank = 100;
 let hand = [];
 let prevHand = [];
 let flippedCards = [];
+let dealerHand = [];
 
 deck.forEach(card => {
   const img = new Image();
   img.src = card.src;
 });
 
-const img = new Image();
-img.src = "https://i.imgur.com/CLvzRZN.png";
+(() => {
+  const back1 = new Image();
+  back1.src = "https://i.imgur.com/CLvzRZN.png";
+
+  const back2 = new Image();
+  back2.src = "https://i.imgur.com/KJzUJmx.png";
+})();
 
 const shuffleDeck = () => {
   for (let i = deck.length - 1; i > 0; i--) {
@@ -43,11 +50,13 @@ const blackjackCheck = () => {
   } else if (total > 21) {
       log("You busted.");
       log("Why the fuck did you hit again?");
+      log("Did your mother raise a quitter?");
+      cardImagesContainer.style.background = "red";
   }
   hit.disabled = true;
 }
 
-const renderCards = () => {
+const renderPlayerCards = () => {
   hand.forEach(card => {
     if (!prevHand.includes(card)) {
       const cardContainer = document.createElement("div");
@@ -76,12 +85,38 @@ const renderCards = () => {
         cardContainer.classList.toggle("flip");
         if (flippedCards.length === hand.length) {
           hit.disabled = false;
+          stand.disabled = false;
           blackjackCheck();
         }
       });
 
       prevHand.push(card);
     }
+  });
+}
+
+const renderDealerCards = () => {
+  dealerHand.forEach(card => {
+    const cardContainer = document.createElement("div");
+    cardContainer.classList.add("card");
+
+    const frontContainer = document.createElement("div");
+    frontContainer.classList.add("card--front");
+
+    const backContainer = document.createElement("div");
+    backContainer.classList.add("card--back");
+
+    const front = document.createElement("img");
+    front.src = card.src;
+
+    const back = document.createElement("img");
+    back.src = "https://i.imgur.com/KJzUJmx.png";
+
+    frontContainer.appendChild(front);
+    backContainer.appendChild(back);
+    cardContainer.appendChild(frontContainer);
+    cardContainer.appendChild(backContainer);
+    dealerHandContainer.appendChild(cardContainer);
   });
 }
 
@@ -101,7 +136,11 @@ newGame.addEventListener("click", () => {
   hand = [];
   prevHand = [];
   flippedCards = [];
+  dealerHand = [];
   cardImagesContainer.innerHTML = "";
+  cardImagesContainer.style.background = "darkslategray";
+  dealerHandContainer.innerHTML = "";
+  dealerHandContainer.style.background = "darkslategray";
   log("You created a new game.");
   deck = [...cardDeck];
   log("Deck was created.");
@@ -132,21 +171,25 @@ start.addEventListener("click", () => {
   hand.push(drawCard());
   log("Dealer dealt you 2 cards.");
 
-  renderCards();
+  dealerHand.push(drawCard());
+  dealerHand.push(drawCard());
+
+  renderPlayerCards();
+  renderDealerCards();
 
   start.disabled = true;
   hit.disabled = true;
-  stand.disabled = false;
+  stand.disabled = true;
 })
 
 hit.addEventListener("click", () => {
-  if (hand.length >= 5) return;
   hit.disabled = true;
+  stand.disabled = true;
   
   hand.push(drawCard());
   log("You hit, dealer dealt you a card.");
 
-  renderCards();
+  renderPlayerCards();
 });
 
 stand.addEventListener("click", () => {
@@ -154,12 +197,19 @@ stand.addEventListener("click", () => {
   hit.disabled = true;
   stand.disabled = true;
 
-  const dealerHandTotal = 18 + Math.floor(Math.random() * 5);
+  dealerHandContainer.childNodes.forEach(child => {
+      if (child.nodeType === 1) {
+          child.classList.toggle('flip');
+      }
+  });
+
+  const dealerHandTotal = dealerHand.reduce((acc, card) => acc + card.points, 0);
   const total = hand.reduce((acc, card) => acc + card.points, 0)
   log(`Dealer has ${dealerHandTotal} points.`);
   log(`You have ${total} points.`);
 
   if (dealerHandTotal > 21) {
+    dealerHandContainer.style.background = "red";
     log("Dealer busted.");
   }
 
@@ -183,7 +233,7 @@ stand.addEventListener("click", () => {
     bankText.innerHTML = `Bank: $${bank}`;
   } else if (dealerHandTotal > total && dealerHandTotal < 21) {
     log(`You lost $${betAmount}.`);
-    log("Just noob bro.");
+    log("Kill yourself.");
     bank -= betAmount;
     bankText.innerHTML = `Bank: $${bank}`;
   } else if (total > 21 && dealerHandTotal < 21) {
