@@ -15,19 +15,22 @@ let hand = [];
 let prevHand = [];
 let flippedCards = [];
 let dealerHand = [];
-
-deck.forEach(card => {
-  const img = new Image();
-  img.src = card.src;
-});
+let dealerPrevHand = [];
 
 (() => {
+  deck.forEach(card => {
+    const img = new Image();
+    img.src = card.src;
+  });
+  
   const back1 = new Image();
   back1.src = "https://i.imgur.com/CLvzRZN.png";
-
-  const back2 = new Image();
-  back2.src = "https://i.imgur.com/KJzUJmx.png";
 })();
+
+// Remember to add async and await
+function wait(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 const shuffleDeck = () => {
   for (let i = deck.length - 1; i > 0; i--) {
@@ -44,59 +47,25 @@ const drawCard = () => {
 
 const blackjackCheck = () => {
   const total = hand.reduce((acc, card) => acc + card.points, 0);
-  if (total < 21) return;
   if (total === 21) {
-      log("You got 21!");
+    log("You got 21!");
+    hit.disabled = true;
   } else if (total > 21) {
-      log("You busted.");
-      log("Why the fuck did you hit again?");
-      log("Did your mother raise a quitter?");
-      cardImagesContainer.style.background = "red";
+    log("You busted.");
+    log("Why the fuck did you hit again?");
+    hit.disabled = true;
+    cardImagesContainer.style.background = "darkred";
+  } else {
+    log("You can choose to hit (draw a card) or stand (end turn).");
   }
-  hit.disabled = true;
 }
 
 const renderPlayerCards = () => {
-  hand.forEach(card => {
-    if (!prevHand.includes(card)) {
-      const cardContainer = document.createElement("div");
-      cardContainer.classList.add("card");
+  hand.forEach(async card => {
+    if (prevHand.includes(card)) return;
 
-      const frontContainer = document.createElement("div");
-      frontContainer.classList.add("card--front");
-
-      const backContainer = document.createElement("div");
-      backContainer.classList.add("card--back");
-
-      const front = document.createElement("img");
-      front.src = card.src;
-
-      const back = document.createElement("img");
-      back.src = "https://i.imgur.com/CLvzRZN.png";
-
-      frontContainer.appendChild(front);
-      backContainer.appendChild(back);
-      cardContainer.appendChild(frontContainer);
-      cardContainer.appendChild(backContainer);
-      cardImagesContainer.appendChild(cardContainer);
-
-      backContainer.addEventListener("click", () => {
-        flippedCards.push(card);
-        cardContainer.classList.toggle("flip");
-        if (flippedCards.length === hand.length) {
-          hit.disabled = false;
-          stand.disabled = false;
-          blackjackCheck();
-        }
-      });
-
-      prevHand.push(card);
-    }
-  });
-}
-
-const renderDealerCards = () => {
-  dealerHand.forEach(card => {
+    prevHand.push(card);
+    
     const cardContainer = document.createElement("div");
     cardContainer.classList.add("card");
 
@@ -110,7 +79,51 @@ const renderDealerCards = () => {
     front.src = card.src;
 
     const back = document.createElement("img");
-    back.src = "https://i.imgur.com/KJzUJmx.png";
+    back.src = "https://i.imgur.com/CLvzRZN.png";
+
+    frontContainer.appendChild(front);
+    backContainer.appendChild(back);
+    cardContainer.appendChild(frontContainer);
+    cardContainer.appendChild(backContainer);
+    cardImagesContainer.appendChild(cardContainer);
+    
+    const clickHandler = () => {
+      backContainer.removeEventListener("click", clickHandler);
+      flippedCards.push(card);
+      cardContainer.classList.toggle("flip");
+      if (flippedCards.length === hand.length) {
+        hit.disabled = false;
+        stand.disabled = false;
+        blackjackCheck();
+      }
+    };
+
+    await wait(1000);
+    
+    backContainer.addEventListener("click", clickHandler);
+  });
+}
+
+const renderDealerCards = () => {
+  dealerHand.forEach(card => {
+    if (dealerPrevHand.includes(card)) return;
+    
+    dealerPrevHand.push(card);
+    
+    const cardContainer = document.createElement("div");
+    cardContainer.classList.add("card");
+
+    const frontContainer = document.createElement("div");
+    frontContainer.classList.add("card--front");
+
+    const backContainer = document.createElement("div");
+    backContainer.classList.add("card--back");
+
+    const front = document.createElement("img");
+    front.src = card.src;
+
+    const back = document.createElement("img");
+    back.src = "https://i.imgur.com/CLvzRZN.png";
 
     frontContainer.appendChild(front);
     backContainer.appendChild(back);
@@ -132,7 +145,9 @@ log("I am your trustworthy emotional support bot.")
 log("99% of gamblers quit before they win just so you know.");
 log("Press new game and have fun!")
 
-newGame.addEventListener("click", () => {
+newGame.addEventListener("click", async () => {
+  newGame.disabled = true;
+  
   hand = [];
   prevHand = [];
   flippedCards = [];
@@ -141,19 +156,25 @@ newGame.addEventListener("click", () => {
   cardImagesContainer.style.background = "darkslategray";
   dealerHandContainer.innerHTML = "";
   dealerHandContainer.style.background = "darkslategray";
+  
   log("You created a new game.");
   deck = [...cardDeck];
-  log("Deck was created.");
   shuffleDeck();
-  log("Deck was shuffled.");
 
+  await wait(1000);
+  log("The dealer shuffled the deck.");
+
+  await wait(1000);
+  betInput.disabled = false;
   log("Please input a bet amount ($).");
 
-  newGame.disabled = true;
   start.disabled = false;
 });
 
-start.addEventListener("click", () => {
+start.addEventListener("click", async () => {
+  hit.disabled = true;
+  stand.disabled = true;
+  
   betAmount = parseInt(betInput.value);
   if (!betAmount) {
     log("You have autism?")
@@ -164,22 +185,28 @@ start.addEventListener("click", () => {
     return;
   }
 
-  log("You started the game.")
-  log(`You placed a bet of $${betAmount}.`);
+  start.disabled = true;
+  betInput.disabled = true;
   
-  hand.push(drawCard());
-  hand.push(drawCard());
-  log("Dealer dealt you 2 cards.");
+  log(`You placed a bet of $${betAmount}.`);
 
+  await wait(1000);
   dealerHand.push(drawCard());
-  dealerHand.push(drawCard());
-
-  renderPlayerCards();
   renderDealerCards();
 
-  start.disabled = true;
-  hit.disabled = true;
-  stand.disabled = true;
+  await wait(1000);
+  dealerHand.push(drawCard());
+  renderDealerCards();
+
+  await wait(1000);
+  hand.push(drawCard());
+  renderPlayerCards();
+
+  await wait(1000);
+  hand.push(drawCard());
+  renderPlayerCards();
+
+  log("Click on your cards to reveal them.");
 })
 
 hit.addEventListener("click", () => {
@@ -192,24 +219,36 @@ hit.addEventListener("click", () => {
   renderPlayerCards();
 });
 
-stand.addEventListener("click", () => {
-  log("You stand.");
+stand.addEventListener("click", async () => {
   hit.disabled = true;
   stand.disabled = true;
+  log("You stand.");
 
+  const total = hand.reduce((acc, card) => acc + card.points, 0);
+  
+  await wait(1000);
+  log(`You have ${total} points.`);
+
+  let dealerHandTotal = dealerHand.reduce((acc, card) => acc + card.points, 0);
+  
+  while (dealerHandTotal <= 16) {
+    dealerHand.push(drawCard());
+    dealerHandTotal = dealerHand.reduce((acc, card) => acc + card.points, 0);
+    await wait(1000);
+    renderDealerCards();
+    log("The dealer decided to hit.");
+  }
+
+  await wait(2000);
   dealerHandContainer.childNodes.forEach(child => {
       if (child.nodeType === 1) {
           child.classList.toggle('flip');
       }
   });
-
-  const dealerHandTotal = dealerHand.reduce((acc, card) => acc + card.points, 0);
-  const total = hand.reduce((acc, card) => acc + card.points, 0)
   log(`Dealer has ${dealerHandTotal} points.`);
-  log(`You have ${total} points.`);
 
   if (dealerHandTotal > 21) {
-    dealerHandContainer.style.background = "red";
+    dealerHandContainer.style.background = "darkred";
     log("Dealer busted.");
   }
 

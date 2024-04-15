@@ -1,11 +1,6 @@
 body {
   background-image: url(https://i.ibb.co/ccg734n/poker-purple-background-playing-card-symbols-pattern-blackjack-vector.jpg);
   color: white;
-  display: grid;
-  gap: 5px;
-  grid-template-columns: 340px 1fr;
-  grid-template-rows: 200px 1fr 200px;
-  align-items: end;
 }
 
 p {
@@ -23,6 +18,14 @@ button {
   height: 35px;
 }
 
+button:disabled {
+  background: gray;
+}
+
+button:not(:disabled):hover {
+  background: wheat;
+}
+
 #hit, #stand {
   background: lightgreen;
   width: 80px;
@@ -35,10 +38,6 @@ button {
 }
 
 #hit:not(:disabled):hover, #stand:not(:disabled):hover {
-  background: white;
-}
-
-button:not(:disabled):hover {
   background: wheat;
 }
 
@@ -51,12 +50,26 @@ input {
   margin: 10px;
 }
 
-#game-log {
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 320px;
+  height: 100vh;
   background: darkslategray;
-  border-radius: 8px;
-  height: 97.5vh;
-  grid-row: span 4;
-  overflow-y: scroll;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+#bank-text {
+  color: lightgreen;
+  font-weight: 800;
+  line-height: 0px;
+}
+
+#game-log {
+  max-height: calc(100vh - 80px);
+  overflow-y: auto;
 }
 
 #game-log div {
@@ -74,6 +87,15 @@ input {
   }
 }
 
+.content {
+  margin-left: 320px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  height: 97.6vh;
+}
+
 .hand-grid {
   background: darkslategray;
   border-radius: 8px;
@@ -81,7 +103,7 @@ input {
   width: 680px;
   display: grid;
   gap: 10px;
-  grid-template-columns: repeat(8, 128px);
+  grid-template-columns: repeat(8, 1fr);
   place-items: center;
 }
 
@@ -91,6 +113,18 @@ input {
   transition: transform 1s;
   transform-style: preserve-3d;
   position: relative;
+  animation: slide-in 1s;
+}
+
+@keyframes slide-in {
+  from {
+      opacity: 0;
+      transform: translateY(-150px);
+    }
+  to {
+      opacity: 1;
+      transform: translateY(0);
+  }
 }
 
 .card img {

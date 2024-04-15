@@ -10,22 +10,26 @@
 </head>
 
 <body>
-  <div id="game-log"></div>
-  <div id="dealer-hand" class="hand-grid"></div>
-  <div id="interaction">
-    <div>
-      <p id="bank-text">Bank: $100</p>
-      <button id="game-btn">New Game</button>
-      <input id="bet-input" placeholder="Input bet amount">
-      <button id="start" disabled=true>Start</button>
-    </div>
-    <div>
-      <button id="hit" disabled=true>Hit</button>
-      <button id="stand" disabled=true>Stand</button>
-      <p>Your hand:</p>
-    </div>
+  <div class="sidebar">
+    <p id="bank-text">Bank: 100</p>
+    <div id="game-log"></div>
   </div>
-  <div id="player-hand" class="hand-grid"></div>
+  <div class="content">
+    <div id="dealer-hand" class="hand-grid"></div>
+    <div id="interaction">
+      <div>
+        <button id="game-btn">New Game</button>
+        <input id="bet-input" placeholder="Input bet amount" disabled=true>
+        <button id="start" disabled=true>Start</button>
+      </div>
+      <div>
+        <button id="hit" disabled=true>Hit</button>
+        <button id="stand" disabled=true>Stand</button>
+        <p>Your hand:</p>
+      </div>
+    </div>
+    <div id="player-hand" class="hand-grid"></div>
+  </div>
   <script src="/socket.io/socket.io.js"></script>
   <script src="./public/cardDeck.js"></script>
   <script src="./public/index.js"></script>
