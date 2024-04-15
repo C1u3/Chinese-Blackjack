@@ -45,8 +45,27 @@ const drawCard = () => {
   return card;
 };
 
+const calculateTotal = (arr) => {
+  let total = 0;
+  let numberOfAces = 0;
+
+  for (const card of arr) {
+    total += card.points;
+    if (card.rank === "Ace") {
+      numberOfAces++;
+    }
+  }
+
+  while (total > 21 && numberOfAces > 0) {
+    total -= 10;
+    numberOfAces--;
+  }
+  
+  return total;
+}
+
 const blackjackCheck = () => {
-  const total = hand.reduce((acc, card) => acc + card.points, 0);
+  const total = calculateTotal(hand);
   if (total === 21) {
     log("You got 21!");
     hit.disabled = true;
@@ -141,9 +160,9 @@ const log = (info) => {
 }
 
 log("Welcome to gambling!");
-log("I am your trustworthy emotional support bot.")
+log("I am your trustworthy emotional support bot.");
 log("99% of gamblers quit before they win just so you know.");
-log("Press new game and have fun!")
+log("Press new game and have fun!");
 
 newGame.addEventListener("click", async () => {
   newGame.disabled = true;
@@ -152,6 +171,7 @@ newGame.addEventListener("click", async () => {
   prevHand = [];
   flippedCards = [];
   dealerHand = [];
+  dealerPrevHand = [];
   cardImagesContainer.innerHTML = "";
   cardImagesContainer.style.background = "darkslategray";
   dealerHandContainer.innerHTML = "";
@@ -224,16 +244,16 @@ stand.addEventListener("click", async () => {
   stand.disabled = true;
   log("You stand.");
 
-  const total = hand.reduce((acc, card) => acc + card.points, 0);
+  const total = calculateTotal(hand);
   
   await wait(1000);
   log(`You have ${total} points.`);
 
-  let dealerHandTotal = dealerHand.reduce((acc, card) => acc + card.points, 0);
+  let dealerHandTotal = calculateTotal(dealerHand);
   
   while (dealerHandTotal <= 16) {
     dealerHand.push(drawCard());
-    dealerHandTotal = dealerHand.reduce((acc, card) => acc + card.points, 0);
+    dealerHandTotal = calculateTotal(dealerHand);
     await wait(1000);
     renderDealerCards();
     log("The dealer decided to hit.");
