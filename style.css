@@ -110,10 +110,10 @@ input {
 .card {
   width: 128px;
   height: 178px;
-  transition: transform 1s;
+  transition: transform 0.5s;
   transform-style: preserve-3d;
   position: relative;
-  animation: slide-in 1s;
+  animation: slide-in 0.5s;
 }
 
 @keyframes slide-in {

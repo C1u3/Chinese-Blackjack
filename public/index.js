@@ -213,8 +213,8 @@ start.addEventListener("click", async () => {
     log("You have autism?")
     log("Please key in a valid amount.");
     return;
-  } else if (betAmount * 2 > bank) {
-    log("You can't afford to bet that amount. You can only bet half your bank.");
+  } else if (betAmount > bank) {
+    log("You can't afford to bet that amount.");
     return;
   }
 
@@ -228,12 +228,12 @@ start.addEventListener("click", async () => {
   renderDealerCards();
 
   await wait(1000);
-  dealerHand.push(drawCard());
-  renderDealerCards();
-
-  await wait(1000);
   hand.push(drawCard());
   renderPlayerCards();
+
+  await wait(1000);
+  dealerHand.push(drawCard());
+  renderDealerCards();
 
   await wait(1000);
   hand.push(drawCard());
