@@ -41,6 +41,15 @@ button:not(:disabled):hover {
   background: wheat;
 }
 
+#borrow {
+  background: lawngreen;
+  width: 680px;
+}
+
+#borrow:hover {
+  background: palegreen;
+}
+
 input {
   font-weight: 800;
   border: none;
@@ -72,10 +81,15 @@ input {
   overflow-y: auto;
 }
 
-#game-log div {
+.log-entry {
+  color: gray;
   font-size: 18px;
   line-height: 30px;
-  animation: appear 2s;
+  animation: appear 1s;
+}
+
+.log-entry.new-entry {
+  color: white;
 }
 
 @keyframes appear {
