@@ -1,1 +1,1 @@
-Announcement: Update was pushed, wait around 20min max.
+Check for updates here
