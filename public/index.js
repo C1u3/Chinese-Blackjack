@@ -22,7 +22,6 @@ let dragon = false;
 let dealerHand = [];
 let dealerPrevHand = [];
 let dealerDragon = false;
-let lastBorrow = 125;
 
 (() => {
   deck.forEach(card => {
@@ -366,8 +365,7 @@ borrow.addEventListener("click", async () => {
   borrow.style.display = "none";
   log("You decided it was a good idea to borrow some money from a loan shark.");
 
-  const borrowAmount = lastBorrow * 2;
-  lastBorrow = borrowAmount;
+  const borrowAmount = betAmount * 2;
   bank += borrowAmount;
   await wait(4000);
   bankText.innerHTML = `Bank: $${bank}`;
