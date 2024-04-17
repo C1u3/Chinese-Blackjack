@@ -16,6 +16,7 @@ let hand = [];
 let prevHand = [];
 let flippedCards = [];
 let dragon = false;
+let aceace = false;
 let dealerHand = [];
 let dealerPrevHand = [];
 let dealerDragon = false;
@@ -69,6 +70,11 @@ const calculateTotal = (arr) => {
     if (card.rank === "Ace") {
       numberOfAces++;
     }
+  }
+
+  if (hand.length === 2 && numberOfAces === 2) {
+    aceace = true;
+    log("You got double ace!");
   }
 
   while (total > 21 && numberOfAces > 0) {
@@ -204,6 +210,7 @@ newGame.addEventListener("click", async () => {
   dealerHand = [];
   dealerPrevHand = [];
   dealerDragon = false;
+  aceace = false;
   cardImagesContainer.innerHTML = "";
   cardImagesContainer.style.background = "darkslategray";
   dealerHandContainer.innerHTML = "";
@@ -320,8 +327,11 @@ stand.addEventListener("click", async () => {
   }
 
   await wait(2000);
-  
-  if (dragon) {
+
+  if (aceace) {
+    log(`You got double ace! You won $${betAmount * 3}(3x)!`);
+    bank += betAmount * 3;
+  } else if (dragon) {
     log(`You got a dragon! You won $${betAmount * 2}(2x)!`);
     bank += betAmount * 2;
   } else if (dragon && total === 21) {
