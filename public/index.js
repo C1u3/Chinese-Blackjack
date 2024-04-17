@@ -6,15 +6,12 @@ const newGame = document.getElementById("game-btn");
 const betInput = document.getElementById("bet-input");
 const start = document.getElementById("start");
 const reshuffle = document.getElementById("reshuffle");
-const borrow = document.getElementById("borrow");
 const dealerHandContainer = document.getElementById("dealer-hand");
 const cardImagesContainer = document.getElementById("player-hand");
 
-borrow.style.display = "none";
-
 let deck = [...cardDeck];
 let betAmount;
-let bank = 100;
+let bank = 10;
 let hand = [];
 let prevHand = [];
 let flippedCards = [];
@@ -353,23 +350,9 @@ stand.addEventListener("click", async () => {
 
   if (bank <= 0 ) {
     await wait(3000);
-    log("You are now bankrupt and homeless. You should go and borrow some money.");
-    borrow.style.display = "block";
+    log("You are now bankrupt and homeless. Refresh the page to start anew.");
     return;
   }
 
   enableElements([newGame]);
 });
-
-borrow.addEventListener("click", async () => {
-  borrow.style.display = "none";
-  log("You decided it was a good idea to borrow some money from a loan shark.");
-
-  const borrowAmount = betAmount * 2;
-  bank += borrowAmount;
-  await wait(4000);
-  bankText.innerHTML = `Bank: $${bank}`;
-  log(`You borrowed $${borrowAmount}.`);
-
-  enableElements([newGame]);
-})
