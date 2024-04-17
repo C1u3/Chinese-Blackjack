@@ -128,14 +128,21 @@ const renderPlayerCards = () => {
     cardContainer.appendChild(backContainer);
     cardImagesContainer.appendChild(cardContainer);
     
-    const clickHandler = () => {
+    const clickHandler = async () => {
       backContainer.removeEventListener("click", clickHandler);
       flippedCards.push(card);
-      cardContainer.classList.toggle("flip");
       if (flippedCards.length === hand.length) {
         enableElements([hit, stand]);
         blackjackCheck();
+        if (calculateTotal(hand) === 21) {
+          cardContainer.classList.toggle("blackjack");
+          await wait(1100);
+          cardContainer.classList.toggle("flip");
+          await wait(500);
+          return;
+        }
       }
+      cardContainer.classList.toggle("flip");
     };
 
     await wait(1000);
