@@ -185,7 +185,7 @@ const log = (info) => {
   gameLog.scrollTo(0, gameLog.scrollHeight);
 }
 
-log("Instructions: Your bank total is at the top of this text. To start playing, press new game. To draw a card, press hit. To end your turn, press stand. The objective of this game is to get 21 points or below, while having more points than the dealer's hand.");
+log("Instructions: Your bank total is at the top of this text. To start playing, press new round. To draw a card, press hit. To end your turn, press stand. The objective of this game is to get 21 points or below, while having more points than the dealer's hand.");
 
 newGame.addEventListener("click", async () => {
   disableElements([newGame]);
@@ -355,4 +355,3 @@ stand.addEventListener("click", async () => {
   }
 
   enableElements([newGame]);
-});
