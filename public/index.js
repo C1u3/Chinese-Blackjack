@@ -350,7 +350,7 @@ stand.addEventListener("click", async () => {
 
   if (bank <= 0 ) {
     await wait(3000);
-    log("You are now bankrupt and homeless. Refresh the page to start anew.");
+    log("You are now bankrupt and homeless. Refresh the page.");
     return;
   }
 
