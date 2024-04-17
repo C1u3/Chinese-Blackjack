@@ -355,3 +355,4 @@ stand.addEventListener("click", async () => {
   }
 
   enableElements([newGame]);
+}
